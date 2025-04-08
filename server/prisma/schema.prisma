@@ -12,3 +12,48 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// Createing user model 
+model User {
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  password           String
+  role               UserRole
+  needPasswordChange Boolean
+  status             UserStaus
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @default(now())
+  admin              Admin?
+
+  @@map("users")
+}
+
+// Creating admin model 
+model Admin {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  profilePhoto  String?
+  contactNumber String
+  isDeleteAt    Boolean
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+
+  user User @relation(fields: [email], references: [email])
+
+  @@map("admins")
+}
+
+// enum for user role 
+enum UserRole {
+  SUPPER_ADMIN
+  ADMIN
+  DOCTOR
+  PATIENT
+}
+
+// enum for userstatus
+enum UserStaus {
+  ACTIVE
+  BLOCKED
+}
