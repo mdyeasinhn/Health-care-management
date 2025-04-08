@@ -19,8 +19,8 @@ model User {
   email              String    @unique
   password           String
   role               UserRole
-  needPasswordChange Boolean
-  status             UserStaus
+  needPasswordChange Boolean   @default(true)
+  status             UserStaus @default(ACTIVE)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @default(now())
   admin              Admin?
@@ -35,7 +35,7 @@ model Admin {
   email         String   @unique
   profilePhoto  String?
   contactNumber String
-  isDeleteAt    Boolean
+  isDeleteAt    Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 
