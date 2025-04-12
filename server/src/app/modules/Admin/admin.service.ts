@@ -4,9 +4,6 @@ import { pagenationHelpars } from "../../../helpars/pagenationHelpars";
 import prisma from "../../../shared/prisma";
 
 
-
-
-
 // Fetches all admin users from the database with optional search and filtering.
 
 const getAllAdminFromDB = async (params: any, options: any) => {
@@ -51,7 +48,17 @@ const getAllAdminFromDB = async (params: any, options: any) => {
             createdAt: 'desc'
         }
     });
-    return result;
+
+    const total= await prisma.admin.count({
+        where : whereConditions
+    })
+    return {
+        meta: {
+            page,
+            limit,
+        },
+        result
+    };
 };
 
 
