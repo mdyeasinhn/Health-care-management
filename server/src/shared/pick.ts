@@ -1,4 +1,5 @@
-const pick = <T, K extends keyof T>(obj: T, keys: K[]): pertial<T> => {
+
+const pick = <T, K extends keyof T>(obj: T, keys: K[]): Partial<T> => {
     const finalObj: Partial<T> = {};
 
     for (const key of keys) {
@@ -10,4 +11,6 @@ const pick = <T, K extends keyof T>(obj: T, keys: K[]): pertial<T> => {
     console.log(finalObj);
     return finalObj;
 
-}
+};
+
+export default pick;
