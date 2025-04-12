@@ -1,36 +1,17 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { adminSearchAbleFields } from "./admin.constent";
-const prisma = new PrismaClient();
+import { pagenationHelpars } from "../../../helpars/pagenationHelpars";
+import prisma from "../../../shared/prisma";
 
 
-const calculatePagenation = (options: {
-    page?: number,
-    limit?: number,
-    sortBy?: string,
-    sortOrder?: string
-}) => {
-    const page: number = Number(options.page) || 1;
-    const limit: number = Number(options.limit) || 10;
-    const skip: number = (Number(page) - 1) * limit;
 
-    const sortBy: string = options.sortBy || 'createAt'
-    const sortOrder: string = options.sortOrder || 'desc'
 
-    return {
-        page,
-        limit,
-        skip,
-        sortBy,
-        sortOrder
-
-    }
-}
 
 // Fetches all admin users from the database with optional search and filtering.
 
 const getAllAdminFromDB = async (params: any, options: any) => {
 
-    const { page, limit, skip } = calculatePagenation(options);
+    const { page, limit, skip } = pagenationHelpars.calculatePagenation(options);
     const { searchTerm, ...filterData } = params;
 
     const andConditions: Prisma.AdminWhereInput[] = [];
