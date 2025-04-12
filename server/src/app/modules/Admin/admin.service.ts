@@ -1,15 +1,16 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { adminSearchAbleFields } from "./admin.constent";
 const prisma = new PrismaClient();
 
 /**
  * Fetches all admin users from the database with optional search and filtering.
  */
-const getAllAdminFromDB = async (params: any) => {
+const getAllAdminFromDB = async (params: any, options: any) => {
+
+    const { limit, page } = options;
     const { searchTerm, ...filterData } = params;
 
     const andConditions: Prisma.AdminWhereInput[] = [];
-
-    const adminSearchAbleFields = ['name', 'email'];
 
     // If there's a search term, create OR conditions to search by name or email
     if (params.searchTerm) {
@@ -37,7 +38,9 @@ const getAllAdminFromDB = async (params: any) => {
     const whereConditions: Prisma.AdminWhereInput = { AND: andConditions };
 
     const result = await prisma.admin.findMany({
-        where: whereConditions
+        where: whereConditions,
+        skip: (Number(page) - 1) * limit,
+        take : Number(limit)
     });
     return result;
 };
