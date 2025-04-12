@@ -10,7 +10,7 @@ const getAllAdminFromDB = async (req: Request, res: Response) => {
 
 
     const filters = pick(req.query, adminFilterAbleFileds)
-    const options = pick(req.query, ['page', 'limit']);
+    const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
     console.log('options', options)
     try {
         const result = await adminService.getAllAdminFromDB(filters, options);
