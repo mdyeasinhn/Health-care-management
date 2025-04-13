@@ -36,6 +36,10 @@ const getAllAdminFromDB = async (params: any, options: any) => {
         })
     };
 
+    andConditions.push({
+        isDeleteAt: false
+    })
+
     const whereConditions: Prisma.AdminWhereInput = { AND: andConditions };
 
     const result = await prisma.admin.findMany({
@@ -62,20 +66,22 @@ const getAllAdminFromDB = async (params: any, options: any) => {
 };
 
 
-const getByIdFromDB = async (id: string) => {
+const getByIdFromDB = async (id: string): Promise<Admin | null> => {
 
     const result = await prisma.admin.findUnique({
         where: {
-            id
+            id,
+            isDeleteAt: false
         }
     })
 
     return result;
 }
-const updatedIntoDB = async (id: string, data: Partial<Admin>) => {
+const updatedIntoDB = async (id: string, data: Partial<Admin>): Promise<Admin> => {
     await prisma.admin.findUniqueOrThrow({
         where: {
-            id
+            id,
+            isDeleteAt: false
         }
     })
 
@@ -89,7 +95,7 @@ const updatedIntoDB = async (id: string, data: Partial<Admin>) => {
     return result;
 }
 
-const deleteFromDB = async (id: string) => {
+const deleteFromDB = async (id: string): Promise<Admin> => {
 
     await prisma.admin.findUniqueOrThrow({
         where: {
@@ -103,7 +109,7 @@ const deleteFromDB = async (id: string) => {
                 id
             }
         });
-        const userDeletedData = await transationClient.user.delete({
+        await transationClient.user.delete({
             where: {
                 email: adminDeletedData.email
             }
@@ -118,7 +124,8 @@ const softDeleteFromDB = async (id: string) => {
 
     await prisma.admin.findUniqueOrThrow({
         where: {
-            id
+            id,
+            isDeleteAt: false
         }
     });
 
@@ -131,7 +138,7 @@ const softDeleteFromDB = async (id: string) => {
                 isDeleteAt: true
             }
         });
-        const userDeletedData = await transationClient.user.update({
+        await transationClient.user.update({
             where: {
                 email: adminDeletedData.email
             },
