@@ -4,6 +4,7 @@ import router from './app/routes';
 import { StatusCodes } from 'http-status-codes';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 
+
 const app: Application = express();
 
 app.use(cors());
@@ -17,9 +18,23 @@ app.get('/', (req: Request, res: Response) => {
     })
 });
 
+
+// Application routes
 app.use('/api/v1', router);
 
-app.use(globalErrorHandler)
+// Global Error Handler
+app.use(globalErrorHandler);
+
+app.use( (req: Request, res: Response, next : NextFunction) => {
+    res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: 'Route not found',
+        error : {
+            path : req.originalUrl,
+            message : "Your requested method is not found"
+        }
+    })
+})
 
 export default app;
 
