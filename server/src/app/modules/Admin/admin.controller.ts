@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { adminService } from "./admin.service";
 import pick from "../../../shared/pick";
 import { adminFilterAbleFileds } from "./admin.constent";
@@ -6,7 +6,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from 'http-status-codes';
 
 // Get all admin data with filtering, pagination, and sorting
-const getAllAdminFromDB = async (req: Request, res: Response) => {
+const getAllAdminFromDB = async (req: Request, res: Response, next: NextFunction) => {
   const filters = pick(req.query, adminFilterAbleFileds);
   const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
 
@@ -18,20 +18,15 @@ const getAllAdminFromDB = async (req: Request, res: Response) => {
       success: true,
       message: "Retrieving all admin data from the database",
       meta: result.meta,
-      data: result.data,
+      data: result,
     });
-  } catch (err: any) {
-    sendResponse(res, {
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: err?.message || "Something went wrong!",
-      data: null,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Get a single admin by ID
-const getByIdFromDB = async (req: Request, res: Response) => {
+const getByIdFromDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
@@ -43,18 +38,13 @@ const getByIdFromDB = async (req: Request, res: Response) => {
       message: "Admin data fetched by ID!",
       data: result,
     });
-  } catch (err: any) {
-    sendResponse(res, {
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: err?.message || "Something went wrong!",
-      data: null,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Update admin data by ID
-const updatedIntoDB = async (req: Request, res: Response) => {
+const updatedIntoDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const data = req.body;
 
@@ -67,18 +57,13 @@ const updatedIntoDB = async (req: Request, res: Response) => {
       message: "Admin data updated!",
       data: result,
     });
-  } catch (err: any) {
-    sendResponse(res, {
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: err?.message || "Something went wrong!",
-      data: null,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Permanently delete admin data by ID
-const deleteIntoDB = async (req: Request, res: Response) => {
+const deleteIntoDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
@@ -90,18 +75,13 @@ const deleteIntoDB = async (req: Request, res: Response) => {
       message: "Admin data deleted!",
       data: result,
     });
-  } catch (err: any) {
-    sendResponse(res, {
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: err?.message || "Something went wrong!",
-      data: null,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
 // Soft delete admin data by ID (mark as deleted without removing)
-const softDeleteIntoDB = async (req: Request, res: Response) => {
+const softDeleteIntoDB = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
@@ -113,13 +93,8 @@ const softDeleteIntoDB = async (req: Request, res: Response) => {
       message: "Admin data soft-deleted!",
       data: result,
     });
-  } catch (err: any) {
-    sendResponse(res, {
-      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-      success: false,
-      message: err?.message || "Something went wrong!",
-      data: null,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
