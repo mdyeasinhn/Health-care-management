@@ -49,8 +49,8 @@ const getAllAdminFromDB = async (params: any, options: any) => {
         }
     });
 
-    const total= await prisma.admin.count({
-        where : whereConditions
+    const total = await prisma.admin.count({
+        where: whereConditions
     })
     return {
         meta: {
@@ -62,8 +62,21 @@ const getAllAdminFromDB = async (params: any, options: any) => {
 };
 
 
+const getByIdFromDB = async (id: string) => {
+
+    const result = await prisma.admin.findUnique({
+        where: {
+            id
+        }
+    })
+
+    return result;
+}
+
+
 
 
 export const adminService = {
-    getAllAdminFromDB
+    getAllAdminFromDB,
+    getByIdFromDB
 }
