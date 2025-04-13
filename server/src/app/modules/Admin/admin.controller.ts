@@ -3,9 +3,9 @@ import { adminService } from "./admin.service";
 import pick from "../../../shared/pick";
 import { adminFilterAbleFileds } from "./admin.constent";
 import sendResponse from "../../../shared/sendResponse";
+import { StatusCodes } from 'http-status-codes';
 
-
-
+// Get all admin data with filtering, pagination, and sorting
 const getAllAdminFromDB = async (req: Request, res: Response) => {
   const filters = pick(req.query, adminFilterAbleFileds);
   const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
@@ -14,15 +14,15 @@ const getAllAdminFromDB = async (req: Request, res: Response) => {
     const result = await adminService.getAllAdminFromDB(filters, options);
 
     sendResponse(res, {
-      statusCode: 200,
+      statusCode: StatusCodes.OK,
       success: true,
-      message: "Retrieving All Admin Data from the Database",
+      message: "Retrieving all admin data from the database",
       meta: result.meta,
-      data: result,
+      data: result.data,
     });
   } catch (err: any) {
     sendResponse(res, {
-      statusCode: 500,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       success: false,
       message: err?.message || "Something went wrong!",
       data: null,
@@ -30,6 +30,7 @@ const getAllAdminFromDB = async (req: Request, res: Response) => {
   }
 };
 
+// Get a single admin by ID
 const getByIdFromDB = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -37,14 +38,14 @@ const getByIdFromDB = async (req: Request, res: Response) => {
     const result = await adminService.getByIdFromDB(id);
 
     sendResponse(res, {
-      statusCode: 200,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "Admin data fetched by ID!",
       data: result,
     });
   } catch (err: any) {
     sendResponse(res, {
-      statusCode: 500,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       success: false,
       message: err?.message || "Something went wrong!",
       data: null,
@@ -52,6 +53,7 @@ const getByIdFromDB = async (req: Request, res: Response) => {
   }
 };
 
+// Update admin data by ID
 const updatedIntoDB = async (req: Request, res: Response) => {
   const { id } = req.params;
   const data = req.body;
@@ -60,14 +62,14 @@ const updatedIntoDB = async (req: Request, res: Response) => {
     const result = await adminService.updatedIntoDB(id, data);
 
     sendResponse(res, {
-      statusCode: 200,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "Admin data updated!",
       data: result,
     });
   } catch (err: any) {
     sendResponse(res, {
-      statusCode: 500,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       success: false,
       message: err?.message || "Something went wrong!",
       data: null,
@@ -75,6 +77,7 @@ const updatedIntoDB = async (req: Request, res: Response) => {
   }
 };
 
+// Permanently delete admin data by ID
 const deleteIntoDB = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -82,14 +85,14 @@ const deleteIntoDB = async (req: Request, res: Response) => {
     const result = await adminService.deleteFromDB(id);
 
     sendResponse(res, {
-      statusCode: 200,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "Admin data deleted!",
       data: result,
     });
   } catch (err: any) {
     sendResponse(res, {
-      statusCode: 500,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       success: false,
       message: err?.message || "Something went wrong!",
       data: null,
@@ -97,6 +100,7 @@ const deleteIntoDB = async (req: Request, res: Response) => {
   }
 };
 
+// Soft delete admin data by ID (mark as deleted without removing)
 const softDeleteIntoDB = async (req: Request, res: Response) => {
   const { id } = req.params;
 
@@ -104,14 +108,14 @@ const softDeleteIntoDB = async (req: Request, res: Response) => {
     const result = await adminService.softDeleteFromDB(id);
 
     sendResponse(res, {
-      statusCode: 200,
+      statusCode: StatusCodes.OK,
       success: true,
       message: "Admin data soft-deleted!",
       data: result,
     });
   } catch (err: any) {
     sendResponse(res, {
-      statusCode: 500,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
       success: false,
       message: err?.message || "Something went wrong!",
       data: null,
@@ -119,6 +123,7 @@ const softDeleteIntoDB = async (req: Request, res: Response) => {
   }
 };
 
+// Export all admin controller methods
 export const adminController = {
   getAllAdminFromDB,
   getByIdFromDB,
