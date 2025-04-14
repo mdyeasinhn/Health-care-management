@@ -4,16 +4,9 @@ import pick from "../../../shared/pick";
 import { adminFilterAbleFileds } from "./admin.constent";
 import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from 'http-status-codes';
+import catchAsync from "../../../shared/catchAsync";
 
-const catchAsync = (fn: RequestHandler) => {
-    return async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            await fn(req, res, next);
-        } catch (err) {
-            next(err)
-        }
-    }
-}
+
 
 // Get all admin data with filtering, pagination, and sorting
 const getAllAdminFromDB: RequestHandler = catchAsync(async (req, res) => {
