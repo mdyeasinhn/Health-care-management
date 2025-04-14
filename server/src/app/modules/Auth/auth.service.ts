@@ -28,7 +28,7 @@ const loginUser = async (payload: {
         "5m"
     )
 
-    const refreshToken =jwtHelpars.generateToken({
+    const refreshToken = jwtHelpars.generateToken({
         email: userData.email,
         role: userData.role
     },
@@ -40,8 +40,13 @@ const loginUser = async (payload: {
         refreshToken,
         needPasswordChange: userData.needPasswordChange
     }
+};
+
+const refresToken = async (token: string) => {
+    console.log('refresToken', token)
 }
 
 export const AuthService = {
     loginUser,
+    refresToken
 }
