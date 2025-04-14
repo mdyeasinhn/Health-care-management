@@ -3,11 +3,12 @@ import { adminSearchAbleFields } from "./admin.constent";
 import { pagenationHelpars } from "../../../helpars/pagenationHelpars";
 import prisma from "../../../shared/prisma";
 import { IAdminFilterRequest } from "./admin.interface";
+import { IPagenationOptions } from "../../interfaces/pagenations";
 
 
 // Fetches all admin users from the database with optional search and filtering.
 
-const getAllAdminFromDB = async (params: IAdminFilterRequest, options: any) => {
+const getAllAdminFromDB = async (params: IAdminFilterRequest, options: IPagenationOptions   ) => {
 
     const { page, limit, skip } = pagenationHelpars.calculatePagenation(options);
     const { searchTerm, ...filterData } = params;
