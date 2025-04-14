@@ -1,6 +1,6 @@
 import { Admin, Prisma, UserStaus } from "@prisma/client";
 import { adminSearchAbleFields } from "./admin.constent";
-import { pagenationHelpars } from "../../../helpars/pagenationHelpars";
+import { pagenationHelpars } from "../../../helpers/pagenationHelpars";
 import prisma from "../../../shared/prisma";
 import { IAdminFilterRequest } from "./admin.interface";
 import { IPagenationOptions } from "../../interfaces/pagenations";
