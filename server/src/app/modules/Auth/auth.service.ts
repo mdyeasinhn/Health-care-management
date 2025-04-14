@@ -1,7 +1,8 @@
+
 import { jwtHelpars } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from 'bcrypt';
-
+import jwt from 'jsonwebtoken';
 
 
 
@@ -43,7 +44,38 @@ const loginUser = async (payload: {
 };
 
 const refresToken = async (token: string) => {
-    console.log('refresToken', token)
+    let decodedData;
+    try {
+        decodedData = jwt.verify(token, "fdsaljfjljfd");
+
+        console.log(decodedData)
+    } catch (error) {
+        throw new Error("You are not authorizeed!")
+    }
+
+    const isUserExist = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: decodedData?.email
+        }
+    });
+
+    
+    const userData = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: decodedData?.email
+        }
+    })
+    const accessToken = jwtHelpars.generateToken({
+        email: userData.email,
+        role: userData.role
+    },
+        "abcdefahijk",
+        "5m"
+    )
+    return {
+        accessToken,
+        needPasswordChange: userData.needPasswordChange
+    }
 }
 
 export const AuthService = {
