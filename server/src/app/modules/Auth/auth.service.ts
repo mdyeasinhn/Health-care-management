@@ -1,8 +1,9 @@
 
+import { UserStaus } from "@prisma/client";
 import { jwtHelpars } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 
 
@@ -12,7 +13,8 @@ const loginUser = async (payload: {
 }) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
-            email: payload.email
+            email: payload.email,
+            status : UserStaus.ACTIVE
         }
     })
     const isCorrectPassword: boolean = await bcrypt.compare(payload.password, userData.password);
@@ -46,7 +48,7 @@ const loginUser = async (payload: {
 const refresToken = async (token: string) => {
     let decodedData;
     try {
-        decodedData = jwt.verify(token, "fdsaljfjljfd");
+        decodedData = jwtHelpars.verifyToken(token, "fdsaljfjljfd");
 
         console.log(decodedData)
     } catch (error) {
@@ -59,10 +61,11 @@ const refresToken = async (token: string) => {
         }
     });
 
-    
+
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
-            email: decodedData?.email
+            email: decodedData?.email,
+            status : UserStaus.ACTIVE
         }
     })
     const accessToken = jwtHelpars.generateToken({
