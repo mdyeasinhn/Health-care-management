@@ -17,7 +17,8 @@ const loginUser = async (payload: {
             email: payload.email,
             status: UserStaus.ACTIVE
         }
-    })
+    });
+
     const isCorrectPassword: boolean = await bcrypt.compare(payload.password, userData.password);
 
     if (!isCorrectPassword) {
@@ -86,9 +87,29 @@ const refresToken = async (token: string) => {
 const changePassword = async (user: any, payload: any) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
-            email: user.email
+            email: user.email,
+            status : UserStaus.ACTIVE
         }
     });
+    const isCorrectPassword: boolean = await bcrypt.compare(payload.oldPassword, userData.password);
+
+    if (!isCorrectPassword) {
+        throw new Error("Password incorrect!")
+    };
+     const hashPassword: string = await bcrypt.hash(payload.newPassword, 12);
+
+     await prisma.user.update({
+        where: {
+            email: user.email
+        },
+        data : {
+            password : hashPassword,
+            needPasswordChange : false
+        }
+     });
+     return {
+        message : "Password changed successfully!"
+     }
 }
 
 export const AuthService = {
