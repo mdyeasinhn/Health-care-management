@@ -8,7 +8,7 @@ import { IPagenationOptions } from "../../interfaces/pagenations";
 
 // Fetches all admin users from the database with optional search and filtering.
 
-const getAllAdminFromDB = async (params: IAdminFilterRequest, options: IPagenationOptions   ) => {
+const getAllAdminFromDB = async (params: IAdminFilterRequest, options: IPagenationOptions) => {
 
     const { page, limit, skip } = pagenationHelpars.calculatePagenation(options);
     const { searchTerm, ...filterData } = params;
@@ -63,7 +63,7 @@ const getAllAdminFromDB = async (params: IAdminFilterRequest, options: IPagenati
             page,
             limit,
         },
-        result
+        data: result
     };
 };
 

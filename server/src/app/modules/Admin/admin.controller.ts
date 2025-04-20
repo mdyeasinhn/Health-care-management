@@ -20,7 +20,7 @@ const getAllAdminFromDB: RequestHandler = catchAsync(async (req, res) => {
         success: true,
         message: "Retrieving all admin data from the database",
         meta: result.meta,
-        data: result,
+        data: result?.data,
     });
 })
 
