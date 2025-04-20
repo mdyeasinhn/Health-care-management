@@ -24,8 +24,6 @@ app.get('/', (req: Request, res: Response) => {
 // Application routes
 app.use('/api/v1', router);
 
-// Global Error Handler
-app.use(globalErrorHandler);
 
 app.use( (req: Request, res: Response, next : NextFunction) => {
     res.status(StatusCodes.NOT_FOUND).json({
@@ -38,5 +36,9 @@ app.use( (req: Request, res: Response, next : NextFunction) => {
     })
 })
 
-export default app;
 
+// Global Error Handler
+app.use(globalErrorHandler);
+
+
+export default app;

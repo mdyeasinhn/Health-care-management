@@ -3,7 +3,8 @@ import { UserStaus } from "@prisma/client";
 import { jwtHelpars } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from 'bcrypt';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import config from "../../../config";
 
 
 
@@ -14,7 +15,7 @@ const loginUser = async (payload: {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: payload.email,
-            status : UserStaus.ACTIVE
+            status: UserStaus.ACTIVE
         }
     })
     const isCorrectPassword: boolean = await bcrypt.compare(payload.password, userData.password);
@@ -27,17 +28,18 @@ const loginUser = async (payload: {
         email: userData.email,
         role: userData.role
     },
-        "abcdefahijk",
-        "5m"
-    )
+        config.jwt.jwt_secret as Secret,
+        config.jwt.expires_in as string
+    );
 
     const refreshToken = jwtHelpars.generateToken({
         email: userData.email,
         role: userData.role
     },
-        "fdsaljfjljfd",
-        "30d"
-    )
+        config.jwt.refresh_token_secret as Secret,
+        config.jwt.refresh_token_expires_in as string
+    );
+
     return {
         accessToken,
         refreshToken,
@@ -48,7 +50,7 @@ const loginUser = async (payload: {
 const refresToken = async (token: string) => {
     let decodedData;
     try {
-        decodedData = jwtHelpars.verifyToken(token, "fdsaljfjljfd");
+        decodedData = jwtHelpars.verifyToken(token, config.jwt.refresh_token_secret as Secret);
 
         console.log(decodedData)
     } catch (error) {
@@ -65,15 +67,15 @@ const refresToken = async (token: string) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: decodedData?.email,
-            status : UserStaus.ACTIVE
+            status: UserStaus.ACTIVE
         }
     })
     const accessToken = jwtHelpars.generateToken({
         email: userData.email,
         role: userData.role
     },
-        "abcdefahijk",
-        "5m"
+        config.jwt.jwt_secret as Secret,
+        config.jwt.expires_in as string
     )
     return {
         accessToken,

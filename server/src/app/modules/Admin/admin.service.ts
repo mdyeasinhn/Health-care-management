@@ -70,7 +70,7 @@ const getAllAdminFromDB = async (params: IAdminFilterRequest, options: IPagenati
 
 const getByIdFromDB = async (id: string): Promise<Admin | null> => {
 
-    const result = await prisma.admin.findUnique({
+    const result = await prisma.admin.findUniqueOrThrow({
         where: {
             id,
             isDeleteAt: false
