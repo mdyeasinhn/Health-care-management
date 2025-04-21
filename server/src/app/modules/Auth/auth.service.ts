@@ -5,6 +5,7 @@ import prisma from "../../../shared/prisma";
 import * as bcrypt from 'bcrypt';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 import config from "../../../config";
+import emailSender from "./emailSender";
 
 
 
@@ -127,6 +128,22 @@ const forgotPassword = async (payload: { email: string }) => {
     )
 
     const resetPassLink = config.reset_pass_link + `?userId=${userData.id}&token=${resetPassToken}`;
+    await emailSender(
+        userData.email,
+        `
+        <div>
+            <p>Dear User,</p>
+            <p>Your password reset link 
+                <a href=${resetPassLink}>
+                    <button>
+                        Reset Password
+                    </button>
+                </a>
+            </p>
+
+        </div>
+        `
+    )
     console.log(resetPassLink)
 
 }
