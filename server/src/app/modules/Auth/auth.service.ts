@@ -88,7 +88,7 @@ const changePassword = async (user: any, payload: any) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: user.email,
-            status : UserStaus.ACTIVE
+            status: UserStaus.ACTIVE
         }
     });
     const isCorrectPassword: boolean = await bcrypt.compare(payload.oldPassword, userData.password);
@@ -96,24 +96,43 @@ const changePassword = async (user: any, payload: any) => {
     if (!isCorrectPassword) {
         throw new Error("Password incorrect!")
     };
-     const hashPassword: string = await bcrypt.hash(payload.newPassword, 12);
+    const hashPassword: string = await bcrypt.hash(payload.newPassword, 12);
 
-     await prisma.user.update({
+    await prisma.user.update({
         where: {
             email: user.email
         },
-        data : {
-            password : hashPassword,
-            needPasswordChange : false
+        data: {
+            password: hashPassword,
+            needPasswordChange: false
         }
-     });
-     return {
-        message : "Password changed successfully!"
-     }
+    });
+    return {
+        message: "Password changed successfully!"
+    }
+};
+
+const forgotPassword = async (payload: { email: string }) => {
+    const userData = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: payload.email,
+            status: UserStaus.ACTIVE
+        }
+    });
+
+    const resetPassToken = jwtHelpars.generateToken(
+        { email: userData.email, role: userData.role },
+        config.jwt.reset_pass_secret as Secret,
+        config.jwt.reset_pass_token_expires_in as string
+    )
+
+    console.log(resetPassToken)
+
 }
 
 export const AuthService = {
     loginUser,
     refresToken,
-    changePassword
+    changePassword,
+    forgotPassword
 }
