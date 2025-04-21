@@ -13,6 +13,9 @@ const emailSender = async (
             user: config.emailSender.email,
             pass: config.emailSender.app_pass,
         },
+        tls: {
+            rejectUnauthorized: false
+        }
     });
 
 
@@ -21,7 +24,7 @@ const emailSender = async (
         from: '" Health Care👻" <mdyeasinhn@gmail.com>', // sender address
         to: email,// list of receivers
         subject: "Reset password link", // Subject line
-       // text: "Hello world?", // plain text body
+        // text: "Hello world?", // plain text body
         html, // html body
     });
 
