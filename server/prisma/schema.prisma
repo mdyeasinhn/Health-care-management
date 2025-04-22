@@ -54,7 +54,7 @@ model Doctor {
   contactNumber       String
   address             String?
   registrationNumber  String
-  experince           Int      @default(0)
+  experience           Int      @default(0)
   gender              Gender
   appointmentFee      Int
   qualification       String
