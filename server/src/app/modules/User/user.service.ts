@@ -1,28 +1,33 @@
-import {  UserRole } from "@prisma/client"
-import  bcrypt from 'bcrypt'
+import { UserRole } from "@prisma/client"
+import bcrypt from 'bcrypt'
 import prisma from "../../../shared/prisma";
+import { Request } from "express";
 
 
-const createAdmin = async (data: any) => {
-    const hashPassword: string = await bcrypt.hash(data.password, 12);
-   
-    const userData = {
-        email: data.admin.email,
-        password: hashPassword,
-        role: UserRole.ADMIN,
-    }
+const createAdmin = async (req: any, ) => {
 
-    const result = await prisma.$transaction(async (transctionClient) => {
-        await transctionClient.user.create({
-            data: userData,
-        });
+        console.log("file->",req.file)
+    console.log("data->",req.body.data)
+    // const hashPassword: string = await bcrypt.hash(data.password, 12);
 
-        const createdAdminData = await transctionClient.admin.create({
-            data: data.admin
-        });
-        return createdAdminData
-    })
-    return result
+
+    // const userData = {
+    //     email: data.admin.email,
+    //     password: hashPassword,
+    //     role: UserRole.ADMIN,
+    // }
+
+    // const result = await prisma.$transaction(async (transctionClient) => {
+    //     await transctionClient.user.create({
+    //         data: userData,
+    //     });
+
+    //     const createdAdminData = await transctionClient.admin.create({
+    //         data: data.admin
+    //     });
+    //     return createdAdminData
+    // })
+    // return result
 }
 
 export const userService = {
