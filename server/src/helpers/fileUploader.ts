@@ -1,7 +1,8 @@
 import multer from "multer";
-import path from "path";
+import path, { resolve } from "path";
 
 import { v2 as cloudinary } from 'cloudinary';
+import { rejects } from "assert";
 
 cloudinary.config({
     cloud_name: 'diepqypex',
@@ -25,14 +26,24 @@ const upload = multer({ storage: storage });
 
 
 const uploadToCloudinary = async (file: any) => {
+    console.log({ file })
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader
+            .upload(
+                file.path, {
+                public_id: file.originalname,
+            },
+                (error, result)  =>{
+                    if(error){
+                        reject(error)
+                    }else{
+                        resolve(result)
+                    }
+                }
+            );
+    })
     // Upload an image
-    cloudinary.uploader
-        .upload(
-            file.path, {
-            public_id: 'shoes',
-        },
-            function (error, result) { console.log(result); }
-        );
+
 }
 
 export const fileUploader = {
