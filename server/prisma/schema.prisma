@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Createing user model 
+// ------------ Createing user model ---------------
 model User {
   id                 String    @id @default(uuid())
   email              String    @unique
@@ -24,11 +24,12 @@ model User {
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @default(now())
   admin              Admin?
+  doctor             Doctor?
 
   @@map("users")
 }
 
-// Creating admin model 
+//---------------- Admin Table----------------
 model Admin {
   id            String   @id @default(uuid())
   name          String
@@ -44,7 +45,36 @@ model Admin {
   @@map("admins")
 }
 
-// enum for user role 
+//----------------- Doctor Table---------------
+model Doctor {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String   @unique
+  profilePhoto        String?
+  contactNumber       String
+  address             String?
+  registrationNumber  String
+  experince           Int      @default(0)
+  gender              Gender
+  appointmentFee      Int
+  qualification       String
+  currentWorkingPlace String
+  designation         String
+  isDeleteAt          Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @default(now())
+  user                User     @relation(fields: [email], references: [email])
+
+  @@map("doctors")
+}
+
+//--------Gender--------
+enum Gender {
+  MALE
+  FEMALE
+}
+
+//-----User role------- 
 enum UserRole {
   SUPPER_ADMIN
   ADMIN
@@ -52,7 +82,7 @@ enum UserRole {
   PATIENT
 }
 
-// enum for userstatus
+//-------Userstatus ---------
 enum UserStaus {
   ACTIVE
   BLOCKED
