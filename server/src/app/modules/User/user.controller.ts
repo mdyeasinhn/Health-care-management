@@ -5,7 +5,7 @@ import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import pick from "../../../shared/pick";
 import { userFilterAbleFiled } from "./user.constant";
-
+//-------------Create Admin ------------------
 const createAdmin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await userService.createAdmin(req);
 
@@ -16,7 +16,7 @@ const createAdmin = catchAsync(async (req: Request, res: Response, next: NextFun
         data: result
     })
 });
-
+//-------------Create Doctor ------------------
 const createDoctor = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await userService.createDoctor(req);
 
@@ -27,7 +27,7 @@ const createDoctor = catchAsync(async (req: Request, res: Response, next: NextFu
         data: result
     })
 });
-
+//-------------Create Patient ------------------
 const createPatient = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const result = await userService.createPatient(req);
 
@@ -38,13 +38,12 @@ const createPatient = catchAsync(async (req: Request, res: Response, next: NextF
         data: result
     })
 });
-
-
+//-------------Get all User---------------------
 const getAllUserFromDB = catchAsync(async (req: Request, res: Response) => {
     const filters = pick(req.query, userFilterAbleFiled);
     const options = pick(req.query, ['page', 'limit', 'sortBy', 'sortOrder']);
 
-    const result = await userService.getAllAdminFromDB(filters, options);
+    const result = await userService.getAllUserFromDB(filters, options);
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,
@@ -53,13 +52,25 @@ const getAllUserFromDB = catchAsync(async (req: Request, res: Response) => {
         meta: result.meta,
         data: result?.data,
     });
-})
+});
+//-------------Change Profile status-------------
+const changeProfileStatus =catchAsync(async(req:Request, res:Response, next:NextFunction)=>{
+    const {id} = req.params;
+    const result = await userService.changeProfileStatus(id, req.body);
 
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "User profile status changed!",
+        data: result,
+    });
+})
 
 export const userController = {
     createAdmin,
     createDoctor,
     createPatient,
-    getAllUserFromDB
+    getAllUserFromDB,
+    changeProfileStatus
 }
 

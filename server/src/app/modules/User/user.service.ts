@@ -1,4 +1,4 @@
-import { Admin, Doctor, Patient, Prisma, UserRole } from "@prisma/client"
+import { Admin, Doctor, Patient, Prisma, User, UserRole, UserStaus } from "@prisma/client"
 import bcrypt from 'bcrypt'
 import prisma from "../../../shared/prisma";
 import { fileUploader } from "../../../helpers/fileUploader";
@@ -8,7 +8,7 @@ import { IPagenationOptions } from "../../interfaces/pagenations";
 import { pagenationHelpars } from "../../../helpers/pagenationHelpars";
 import { userSearchAbleFields } from "./user.constant";
 
-
+//-------------Create Admin ------------------
 const createAdmin = async (req: Request): Promise<Admin> => {
     const file = req.file as IFile;
     if (file) {
@@ -37,7 +37,7 @@ const createAdmin = async (req: Request): Promise<Admin> => {
     })
     return result
 }
-
+//-------------Create Doctor ------------------
 const createDoctor = async (req: Request): Promise<Doctor> => {
     const file = req.file as IFile;
     if (file) {
@@ -66,6 +66,7 @@ const createDoctor = async (req: Request): Promise<Doctor> => {
     })
     return result
 }
+//-------------Create Patient ------------------
 const createPatient = async (req: Request): Promise<Patient> => {
     const file = req.file as IFile;
     if (file) {
@@ -94,9 +95,8 @@ const createPatient = async (req: Request): Promise<Patient> => {
     })
     return result
 };
-
-
-const getAllAdminFromDB = async (params: any, options: IPagenationOptions) => {
+//-------------Get all User---------------------
+const getAllUserFromDB = async (params: any, options: IPagenationOptions) => {
 
     const { page, limit, skip } = pagenationHelpars.calculatePagenation(options);
     const { searchTerm, ...filterData } = params;
@@ -148,7 +148,7 @@ const getAllAdminFromDB = async (params: any, options: IPagenationOptions) => {
             updatedAt: true,
             admin: true,
             doctor: true,
-            patient:true
+            patient: true
         }
     });
 
@@ -163,11 +163,26 @@ const getAllAdminFromDB = async (params: any, options: IPagenationOptions) => {
         data: result
     };
 };
-
+//-------------Change Profile status-------------
+const changeProfileStatus = async (id: string, data: UserStaus) => {
+    const userData = await prisma.user.findUniqueOrThrow({
+        where: {
+            id
+        }
+    });
+    const updateUserStatus = await prisma.user.update({
+        where: {
+            id
+        },
+        data
+    })
+    return updateUserStatus
+};
 
 export const userService = {
     createAdmin,
     createDoctor,
     createPatient,
-    getAllAdminFromDB
+    getAllUserFromDB,
+    changeProfileStatus
 }
