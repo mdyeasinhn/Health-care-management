@@ -4,6 +4,7 @@ import auth from '../../middlewares/auth';
 import { UserRole } from '@prisma/client';
 import { fileUploader } from '../../../helpers/fileUploader';
 import { userValidation } from './user.validation';
+import validateRequest from '../../middlewares/validateRequest';
 
 const router = express.Router();
 
@@ -40,6 +41,7 @@ router.post("/create-patient",
 
 router.patch('/:id/status',
     auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN),
+    validateRequest(userValidation.updateStatus),
     userController.changeProfileStatus
 );
 export const userRoutes = router;
