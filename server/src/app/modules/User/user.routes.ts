@@ -8,6 +8,11 @@ import validateRequest from '../../middlewares/validateRequest';
 
 const router = express.Router();
 
+router.get('/me',
+    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    userController.getMyProfile
+);
+
 router.get('/',
     auth(UserRole.ADMIN, UserRole.SUPPER_ADMIN),
     userController.getAllUserFromDB
@@ -44,5 +49,6 @@ router.patch('/:id/status',
     validateRequest(userValidation.updateStatus),
     userController.changeProfileStatus
 );
+
 export const userRoutes = router;
 
