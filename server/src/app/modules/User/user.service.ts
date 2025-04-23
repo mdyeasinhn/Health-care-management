@@ -137,6 +137,18 @@ const getAllAdminFromDB = async (params: any, options: IPagenationOptions) => {
             [options.sortBy]: options.sortOrder
         } : {
             createdAt: 'desc'
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            status: true,
+            needPasswordChange: true,
+            createdAt: true,
+            updatedAt: true,
+            admin: true,
+            doctor: true,
+            patient:true
         }
     });
 
