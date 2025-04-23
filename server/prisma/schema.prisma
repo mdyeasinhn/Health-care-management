@@ -25,6 +25,7 @@ model User {
   updatedAt          DateTime  @default(now())
   admin              Admin?
   doctor             Doctor?
+  patient            Patient?
 
   @@map("users")
 }
@@ -54,7 +55,7 @@ model Doctor {
   contactNumber       String
   address             String?
   registrationNumber  String
-  experience           Int      @default(0)
+  experience          Int      @default(0)
   gender              Gender
   appointmentFee      Int
   qualification       String
@@ -66,6 +67,22 @@ model Doctor {
   user                User     @relation(fields: [email], references: [email])
 
   @@map("doctors")
+}
+
+//-------------Patient Table ------------------
+model Patient {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  profilePhoto  String?
+  contactNumber String
+  address       String?
+  isDeleteAt    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  user          User     @relation(fields: [email], references: [email])
+
+  @@map("patients")
 }
 
 //--------Gender--------
