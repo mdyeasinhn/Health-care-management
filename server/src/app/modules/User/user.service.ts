@@ -7,6 +7,7 @@ import { Request } from "express";
 import { IPagenationOptions } from "../../interfaces/pagenations";
 import { pagenationHelpars } from "../../../helpers/pagenationHelpars";
 import { userSearchAbleFields } from "./user.constant";
+import { IAuthUser } from "../../interfaces/common";
 
 //-------------Create Admin ------------------
 const createAdmin = async (req: Request): Promise<Admin> => {
@@ -180,10 +181,10 @@ const changeProfileStatus = async (id: string, data: UserStaus) => {
 };
 
 //-------------Get My Profile-------------
-const getMyProfile = async (user: any) => {
+const getMyProfile = async (user: IAuthUser) => {
     const userInfo = await prisma.user.findUniqueOrThrow({
         where: {
-            email: user.email,
+            email: user?.email,
             status: UserStaus.ACTIVE
         },
         select: {
@@ -223,10 +224,10 @@ const getMyProfile = async (user: any) => {
     return { ...userInfo, ...profileInfo }
 }
 
-const updateMyProfile = async (user: any, req: Request) => {
+const updateMyProfile = async (user: IAuthUser, req: Request) => {
     const userInfo = await prisma.user.findUniqueOrThrow({
         where: {
-            email: user.email,
+            email: user?.email,
             status: UserStaus.ACTIVE
         }
     });
