@@ -48,23 +48,24 @@ model Admin {
 
 //----------------- Doctor Table---------------
 model Doctor {
-  id                  String   @id @default(uuid())
+  id                  String              @id @default(uuid())
   name                String
-  email               String   @unique
+  email               String              @unique
   profilePhoto        String?
   contactNumber       String
   address             String?
   registrationNumber  String
-  experience          Int      @default(0)
+  experience          Int                 @default(0)
   gender              Gender
   appointmentFee      Int
   qualification       String
   currentWorkingPlace String
   designation         String
-  isDeleteAt          Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @default(now())
-  user                User     @relation(fields: [email], references: [email])
+  isDeleteAt          Boolean             @default(false)
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @default(now())
+  user                User                @relation(fields: [email], references: [email])
+  doctorSpecialties   DoctorSpecialties[]
 
   @@map("doctors")
 }
@@ -83,6 +84,27 @@ model Patient {
   user          User     @relation(fields: [email], references: [email])
 
   @@map("patients")
+}
+
+//-------------Specialties Table ------------------
+model Specialties {
+  id                String              @id @default(uuid())
+  title             String
+  icon              String
+  doctorSpecialties DoctorSpecialties[]
+
+  @@map("specialties")
+}
+
+//-------------DoctorSpecialties Table ------------------
+model DoctorSpecialties {
+  specialitiesId String
+  specialites    Specialties @relation(fields: [specialitiesId], references: [id])
+  doctorId       String
+  doctor         Doctor      @relation(fields: [doctorId], references: [id])
+
+  @@id([specialitiesId, doctorId])
+  @@map("doctor_specialites")
 }
 
 //--------Gender--------
