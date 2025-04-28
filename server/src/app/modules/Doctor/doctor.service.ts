@@ -116,8 +116,8 @@ const updateIntoDB = async (id: string, payload: any) => {
         }
     });
 
-    const result = await prisma.$transaction(async (transactionClient) => {
-        const updatedDoctorIntoDB = await transactionClient.doctor.update({
+    await prisma.$transaction(async (transactionClient) => {
+        await transactionClient.doctor.update({
             where: {
                 id
             },
@@ -130,8 +130,9 @@ const updateIntoDB = async (id: string, payload: any) => {
         if (specialties && specialties.length > 0) {
             // delete specialties
             const deleteSpecialtiesIds = specialties.filter(specialty => specialty.isDeleteAt);
+            console.log("delete", deleteSpecialtiesIds)
             for (const specialty of deleteSpecialtiesIds) {
-                const createDoctorSpecialties = await transactionClient.doctorSpecialties.deleteMany({
+                await transactionClient.doctorSpecialties.deleteMany({
                     where: {
                         doctorId: doctorInfo.id,
                         specialitiesId: specialty.specialitesId
@@ -141,8 +142,9 @@ const updateIntoDB = async (id: string, payload: any) => {
 
             // create specialties 
             const createSpecialtiesIds = specialties.filter(specialty => !specialty.isDeleteAt);
+            console.log("create-->", createSpecialtiesIds)
             for (const specialty of createSpecialtiesIds) {
-                const createDoctorSpecialties = await transactionClient.doctorSpecialties.create({
+                await transactionClient.doctorSpecialties.create({
                     data: {
                         doctorId: doctorInfo.id,
                         specialitiesId: specialty.specialitesId
@@ -151,7 +153,18 @@ const updateIntoDB = async (id: string, payload: any) => {
             }
         }
 
-        return updatedDoctorIntoDB
+    });
+    const result = await prisma.doctor.findUnique({
+        where: {
+            id: doctorInfo.id,
+        },
+        include: {
+            doctorSpecialties: {
+                include: {
+                    specialites: true
+                }
+            }
+        }
     });
     return result
 }
