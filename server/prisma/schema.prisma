@@ -83,6 +83,7 @@ model Patient {
   updatedAt         DateTime           @default(now())
   user              User               @relation(fields: [email], references: [email])
   PatientHealthData PatientHealthData?
+  medicalReport     MedicalReport[]
 
   @@map("patients")
 }
@@ -133,6 +134,19 @@ model PatientHealthData {
   updatedAt           DateTime      @default(now())
 
   @@map("patient_health_datas")
+}
+
+//-------------Medical Report Table ------------------
+model MedicalReport {
+  id         String   @id @default(uuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  reportName String
+  reportLink String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  @@map("medical_reports")
 }
 
 //--------Gender--------
