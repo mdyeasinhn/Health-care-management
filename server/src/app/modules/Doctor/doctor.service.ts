@@ -147,10 +147,11 @@ const updateIntoDB = async (id: string, payload: any) => {
                 await transactionClient.doctorSpecialties.create({
                     data: {
                         doctorId: doctorInfo.id,
-                        specialitiesId: specialty.specialitesId
+                        specialitiesId: specialty.specialitiesId
                     }
                 })
-            }
+            };
+
         }
 
     });

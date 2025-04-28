@@ -72,16 +72,17 @@ model Doctor {
 
 //-------------Patient Table ------------------
 model Patient {
-  id            String   @id @default(uuid())
-  name          String
-  email         String   @unique
-  profilePhoto  String?
-  contactNumber String
-  address       String?
-  isDeleteAt    Boolean  @default(false)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
-  user          User     @relation(fields: [email], references: [email])
+  id                String             @id @default(uuid())
+  name              String
+  email             String             @unique
+  profilePhoto      String?
+  contactNumber     String
+  address           String?
+  isDeleteAt        Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @default(now())
+  user              User               @relation(fields: [email], references: [email])
+  PatientHealthData PatientHealthData?
 
   @@map("patients")
 }
@@ -107,6 +108,33 @@ model DoctorSpecialties {
   @@map("doctor_specialites")
 }
 
+//-------------Patient Health Data Table ------------------
+model PatientHealthData {
+  id                  String        @id @default(uuid())
+  patientId           String        @unique
+  patient             Patient       @relation(fields: [patientId], references: [id])
+  gender              Gender
+  dateOfBirth         String
+  bloodGroup          BloodGroup
+  hasAllergies        Boolean
+  hasDiabetes         Boolean
+  height              String
+  weight              String
+  smokingStatus       Boolean
+  dietaryPreferences  String
+  pregnancyStatus     Boolean
+  mentalHealthHistory String
+  immunizationStatus  String
+  hasPastSurgeries    Boolean
+  recentAnxiety       Boolean
+  recentDepression    Boolean
+  maritalStatus       MaritalStatus
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @default(now())
+
+  @@map("patient_health_datas")
+}
+
 //--------Gender--------
 enum Gender {
   MALE
@@ -126,4 +154,20 @@ enum UserStaus {
   ACTIVE
   BLOCKED
   DELETED
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  B_POSITIVE
+  O_POSITIVE
+  AB_POSITIVE
+  A_NEGATIVE
+  B_NEGATIVE
+  O_NEGATIVE
+  AB_NEGATIVE
+}
+
+enum MaritalStatus {
+  MARRIED
+  UNMARRIED
 }
