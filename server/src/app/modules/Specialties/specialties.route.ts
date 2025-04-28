@@ -5,6 +5,11 @@ import { SpecialtiesValidtaion } from './specialties.valitation';
 
 const router = express.Router();
 
+router.get(
+    '/',
+    SpecialtiesController.getAllFromDB
+);
+
 router.post('/', 
 
     fileUploader.upload.single("file"),
@@ -12,9 +17,7 @@ router.post('/',
         req.body = SpecialtiesValidtaion.create.parse(JSON.parse(req.body.data))
         return SpecialtiesController.insertIntoDB(req, res, next)
     }
-)
-
-
+);
 
 
 export const SpecialtiesRoutes = router;

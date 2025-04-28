@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import catchAsync from "../../../shared/catchAsync";
-import { SpecialtiesServices } from "./specialties.service";
+import { SpecialtiesService } from "./specialties.service";
 import sendResponse from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 
 const insertIntoDB = catchAsync(async (req: Request, res: Response,) => {
-    const result = await SpecialtiesServices.insertIntoDB(req);
+    const result = await SpecialtiesService.insertIntoDB(req);
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,
@@ -15,6 +15,16 @@ const insertIntoDB = catchAsync(async (req: Request, res: Response,) => {
     })
 });
 
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+    const result = await SpecialtiesService.getAllFromDB();
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Specialties data fetched successfully!',
+        data: result,
+    });
+});
 export const SpecialtiesController = {
-    insertIntoDB
+    insertIntoDB,
+    getAllFromDB
 }
