@@ -3,6 +3,8 @@ import { pagenationHelpars } from "../../../helpers/pagenationHelpars";
 import { IPagenationOptions } from "../../interfaces/pagenations";
 import prisma from "../../../shared/prisma";
 import { Prisma } from "@prisma/client";
+import { IPatientFilterRequest } from "./patient.interface";
+import { patientSearchableFields } from "./patient.constant";
 
 const getAllFromDB = async (
     filters: IPatientFilterRequest,
@@ -54,7 +56,7 @@ const getAllFromDB = async (
           },
       include: {
         medicalReport: true,
-        patientHealthData: true,
+        PatientHealthData: true,
       }
     });
     const total = await prisma.patient.count({
@@ -70,3 +72,7 @@ const getAllFromDB = async (
       data: result,
     };
   };
+
+  export const PatientService ={
+    getAllFromDB
+  }
