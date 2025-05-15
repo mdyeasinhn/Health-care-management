@@ -1,4 +1,4 @@
-import { Doctor, Prisma, UserStaus } from "@prisma/client";
+import { Doctor, Prisma, UserStatus } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import { IDoctorFilterRequest } from "./doctor.interface";
 import { IPagenationOptions } from "../../interfaces/pagenations";
@@ -53,7 +53,7 @@ const getAllFromDB = async (
     }
 
     andConditions.push({
-        isDeleteAt: false,
+        isDeleted: false,
     });
 
     const whereConditions: Prisma.DoctorWhereInput =
@@ -94,7 +94,7 @@ const getByIdFromDB = async (id: string): Promise<Doctor | null> => {
     const result = await prisma.doctor.findUnique({
         where: {
             id,
-            isDeleteAt: false,
+            isDeleted: false,
         },
         include: {
             doctorSpecialties: {
@@ -129,7 +129,7 @@ const updateIntoDB = async (id: string, payload: any) => {
 
         if (specialties && specialties.length > 0) {
             // delete specialties
-            const deleteSpecialtiesIds = specialties.filter(specialty => specialty.isDeleteAt);
+            const deleteSpecialtiesIds = specialties.filter(specialty => specialty.isDeleted);
             console.log("delete", deleteSpecialtiesIds)
             for (const specialty of deleteSpecialtiesIds) {
                 await transactionClient.doctorSpecialties.deleteMany({
@@ -141,7 +141,7 @@ const updateIntoDB = async (id: string, payload: any) => {
             }
 
             // create specialties 
-            const createSpecialtiesIds = specialties.filter(specialty => !specialty.isDeleteAt);
+            const createSpecialtiesIds = specialties.filter(specialty => !specialty.isDeleted);
             console.log("create-->", createSpecialtiesIds)
             for (const specialty of createSpecialtiesIds) {
                 await transactionClient.doctorSpecialties.create({
@@ -176,7 +176,7 @@ const softDelete = async (id: string): Promise<Doctor> => {
         const deleteDoctor = await transactionClient.doctor.update({
             where: { id },
             data: {
-                isDeleteAt: true,
+                isDeleted: true,
             },
         });
 
@@ -185,7 +185,7 @@ const softDelete = async (id: string): Promise<Doctor> => {
                 email: deleteDoctor.email,
             },
             data: {
-                status: UserStaus.DELETED,
+                status: UserStatus.DELETED,
             },
         });
 

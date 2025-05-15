@@ -1,4 +1,4 @@
-import { Admin, Doctor, Patient, Prisma, User, UserRole, UserStaus } from "@prisma/client"
+import { Admin, Doctor, Patient, Prisma, User, UserRole, UserStatus } from "@prisma/client"
 import bcrypt from 'bcrypt'
 import prisma from "../../../shared/prisma";
 import { fileUploader } from "../../../helpers/fileUploader";
@@ -165,7 +165,7 @@ const getAllUserFromDB = async (params: any, options: IPagenationOptions) => {
     };
 };
 //-------------Change Profile status-------------
-const changeProfileStatus = async (id: string, data: UserStaus) => {
+const changeProfileStatus = async (id: string, data: UserStatus) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             id
@@ -185,7 +185,7 @@ const getMyProfile = async (user: IAuthUser) => {
     const userInfo = await prisma.user.findUniqueOrThrow({
         where: {
             email: user?.email,
-            status: UserStaus.ACTIVE
+            status: UserStatus.ACTIVE
         },
         select: {
             id: true,
@@ -196,7 +196,7 @@ const getMyProfile = async (user: IAuthUser) => {
     })
     let profileInfo;
 
-    if (userInfo.role === UserRole.SUPPER_ADMIN) {
+    if (userInfo.role === UserRole.SUPER_ADMIN) {
         profileInfo = await prisma.admin.findUnique({
             where: {
                 email: userInfo.email
@@ -228,7 +228,7 @@ const updateMyProfile = async (user: IAuthUser, req: Request) => {
     const userInfo = await prisma.user.findUniqueOrThrow({
         where: {
             email: user?.email,
-            status: UserStaus.ACTIVE
+            status: UserStatus.ACTIVE
         }
     });
 
@@ -240,7 +240,7 @@ const updateMyProfile = async (user: IAuthUser, req: Request) => {
 
     let profileInfo;
 
-    if (userInfo.role === UserRole.SUPPER_ADMIN) {
+    if (userInfo.role === UserRole.SUPER_ADMIN) {
         profileInfo = await prisma.admin.update({
             where: {
                 email: userInfo.email

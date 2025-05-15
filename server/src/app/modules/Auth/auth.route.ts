@@ -10,7 +10,7 @@ router.post('/login', AuthController.loginUser);
 router.post('/refresh-token', AuthController.refreshToken);
 
 router.post('/change-password',
-    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
     AuthController.changePassword
 );
 router.post('/forgot-password',

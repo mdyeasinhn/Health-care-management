@@ -1,5 +1,5 @@
 
-import { UserStaus } from "@prisma/client";
+import { UserStatus } from "@prisma/client";
 import { jwtHelpars } from "../../../helpers/jwtHelpers";
 import prisma from "../../../shared/prisma";
 import * as bcrypt from 'bcrypt';
@@ -18,7 +18,7 @@ const loginUser = async (payload: {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: payload.email,
-            status: UserStaus.ACTIVE
+            status: UserStatus.ACTIVE
         }
     });
 
@@ -71,7 +71,7 @@ const refresToken = async (token: string) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: decodedData?.email,
-            status: UserStaus.ACTIVE
+            status: UserStatus.ACTIVE
         }
     })
     const accessToken = jwtHelpars.generateToken({
@@ -91,7 +91,7 @@ const changePassword = async (user: any, payload: any) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: user.email,
-            status: UserStaus.ACTIVE
+            status: UserStatus.ACTIVE
         }
     });
     const isCorrectPassword: boolean = await bcrypt.compare(payload.oldPassword, userData.password);
@@ -119,7 +119,7 @@ const forgotPassword = async (payload: { email: string }) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
             email: payload.email,
-            status: UserStaus.ACTIVE
+            status: UserStatus.ACTIVE
         }
     });
 
@@ -154,7 +154,7 @@ const resetPassword = async (token: string, payload: { id: string, password: str
     const userData = await prisma.user.findUnique({
         where: {
             id: payload.id,
-            status: UserStaus.ACTIVE
+            status: UserStatus.ACTIVE
         }
     });
     if(!userData){

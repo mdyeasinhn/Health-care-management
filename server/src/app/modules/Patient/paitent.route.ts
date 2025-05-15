@@ -9,6 +9,11 @@ router.get(
     PatientController.getAllFromDB
 );
 
-router.get('/:id', PatientController.getByIdFromDB)
+router.get('/:id', PatientController.getByIdFromDB);
+
+router.delete(
+    '/soft/:id',
+    PatientController.softDelete
+);
 
 export const PatientRoutes = router;

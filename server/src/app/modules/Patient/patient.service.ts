@@ -2,7 +2,7 @@
 import { pagenationHelpars } from "../../../helpers/pagenationHelpars";
 import { IPagenationOptions } from "../../interfaces/pagenations";
 import prisma from "../../../shared/prisma";
-import { Patient, Prisma } from "@prisma/client";
+import { Patient, Prisma, UserStatus } from "@prisma/client";
 import { IPatientFilterRequest } from "./patient.interface";
 import { patientSearchableFields } from "./patient.constant";
 
@@ -38,7 +38,7 @@ const getAllFromDB = async (
     });
   }
   andConditions.push({
-    isDeleteAt: false,
+    isDeleted: false,
   });
 
   const whereConditions: Prisma.PatientWhereInput =
@@ -79,7 +79,7 @@ const getByIdFromDB = async (id: string): Promise<Patient | null> => {
   const result = await prisma.patient.findUnique({
     where: {
       id,
-      isDeleteAt: false,
+      isDeleted: false,
     },
     include: {
       medicalReport: true,
@@ -88,7 +88,31 @@ const getByIdFromDB = async (id: string): Promise<Patient | null> => {
   });
   return result;
 };
+
+
+const softDelete = async (id: string): Promise<Patient | null> => {
+  return await prisma.$transaction(async transactionClient => {
+    const deletedPatient = await transactionClient.patient.update({
+      where: { id },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    await transactionClient.user.update({
+      where: {
+        email: deletedPatient.email,
+      },
+      data: {
+        status: UserStatus.DELETED,
+      },
+    });
+
+    return deletedPatient;
+  });
+};
 export const PatientService = {
   getAllFromDB,
-  getByIdFromDB
+  getByIdFromDB,
+  softDelete
 }

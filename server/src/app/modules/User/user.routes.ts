@@ -9,17 +9,17 @@ import validateRequest from '../../middlewares/validateRequest';
 const router = express.Router();
 
 router.get('/me',
-    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
     userController.getMyProfile
 );
 
 router.get('/',
-    auth(UserRole.ADMIN, UserRole.SUPPER_ADMIN),
+    auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
     userController.getAllUserFromDB
 );
 
 router.post("/create-admin",
-    auth(UserRole.ADMIN, UserRole.SUPPER_ADMIN),
+    auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
     fileUploader.upload.single("file"),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = userValidation.createAdmin.parse(JSON.parse(req.body.data))
@@ -28,7 +28,7 @@ router.post("/create-admin",
 );
 
 router.post("/create-doctor",
-    auth(UserRole.ADMIN, UserRole.SUPPER_ADMIN),
+    auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
     fileUploader.upload.single("file"),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = userValidation.createDoctor.parse(JSON.parse(req.body.data))
@@ -45,13 +45,13 @@ router.post("/create-patient",
 );
 
 router.patch('/:id/status',
-    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     validateRequest(userValidation.updateStatus),
     userController.changeProfileStatus
 );
 
 router.patch("/update-my-profile",
-    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
     fileUploader.upload.single("file"),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = JSON.parse(req.body.data)

@@ -14,14 +14,14 @@ router.get("/:id", DoctorController.getByIdFromDB);
 
 router.patch(
     '/:id',
-    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
     // validateRequest(DoctorValidation.update),
     DoctorController.updateIntoDB
 );
 
 router.delete(
     '/soft/:id',
-    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     DoctorController.softDelete);
 
 export const DoctorRoutes = router;

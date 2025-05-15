@@ -23,7 +23,7 @@ router.post('/',
 
 router.delete(
     '/:id',
-    auth(UserRole.SUPPER_ADMIN, UserRole.ADMIN),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     SpecialtiesController.deleteFromDB
 );
 

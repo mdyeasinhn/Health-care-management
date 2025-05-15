@@ -20,7 +20,7 @@ model User {
   password           String
   role               UserRole
   needPasswordChange Boolean   @default(true)
-  status             UserStaus @default(ACTIVE)
+  status             UserStatus @default(ACTIVE)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @default(now())
   admin              Admin?
@@ -37,7 +37,7 @@ model Admin {
   email         String   @unique
   profilePhoto  String?
   contactNumber String
-  isDeleteAt    Boolean  @default(false)
+  isDeleted    Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 
@@ -61,7 +61,7 @@ model Doctor {
   qualification       String
   currentWorkingPlace String
   designation         String
-  isDeleteAt          Boolean             @default(false)
+  isDeleted          Boolean             @default(false)
   createdAt           DateTime            @default(now())
   updatedAt           DateTime            @default(now())
   user                User                @relation(fields: [email], references: [email])
@@ -78,7 +78,7 @@ model Patient {
   profilePhoto      String?
   contactNumber     String
   address           String?
-  isDeleteAt        Boolean            @default(false)
+  isDeleted        Boolean            @default(false)
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @default(now())
   user              User               @relation(fields: [email], references: [email])
@@ -157,14 +157,14 @@ enum Gender {
 
 //-----User role------- 
 enum UserRole {
-  SUPPER_ADMIN
+  SUPER_ADMIN
   ADMIN
   DOCTOR
   PATIENT
 }
 
 //-------Userstatus ---------
-enum UserStaus {
+enum UserStatus {
   ACTIVE
   BLOCKED
   DELETED
