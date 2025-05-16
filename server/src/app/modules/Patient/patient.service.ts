@@ -73,8 +73,6 @@ const getAllFromDB = async (
   };
 };
 
-
-
 const getByIdFromDB = async (id: string): Promise<Patient | null> => {
   const result = await prisma.patient.findUnique({
     where: {
@@ -89,6 +87,22 @@ const getByIdFromDB = async (id: string): Promise<Patient | null> => {
   return result;
 };
 
+const updateIntoDB = async (id: string, payload: any) => {
+  console.log(id, payload);
+
+  const result = await prisma.patient.update({
+    where: {
+      id
+    },
+    data: payload,
+    include: {
+      PatientHealthData: true,
+      medicalReport: true
+    }
+  })
+  return result;
+
+};
 
 const softDelete = async (id: string): Promise<Patient | null> => {
   return await prisma.$transaction(async transactionClient => {
@@ -114,5 +128,6 @@ const softDelete = async (id: string): Promise<Patient | null> => {
 export const PatientService = {
   getAllFromDB,
   getByIdFromDB,
-  softDelete
+  softDelete,
+  updateIntoDB
 }
